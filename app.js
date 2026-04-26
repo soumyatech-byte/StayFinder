@@ -22,9 +22,11 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js")
 const reviewRouter = require("./routes/review.js")
 const userRouter = require("./routes/user.js")
+const bookingRoutes = require("./routes/booking.js");
 
 
-const dbUrl = process.env.ATLASDB_URL;
+// const dbUrl = process.env.ATLASDB_URL;
+const Mongo_URL='mongodb://127.0.0.1:27017/wonderLust';
 
 main().then(()=>{
     console.log("Connected to MongoDB successfully");
@@ -34,7 +36,7 @@ main().then(()=>{
    })
    
 async function main(){
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(Mongo_URL);
 }
 
 app.set("view engine", "ejs");
@@ -46,7 +48,7 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    mongoUrl: Mongo_URL,
     crypto:{
         secret: process.env.SECRET,
     },
@@ -74,7 +76,6 @@ const sessionOptions = {
 // app.get("/",(req,res)=>{
 //     res.send("Hi , I am root");
 // });
-
 
 
 app.use(session(sessionOptions));
@@ -108,7 +109,8 @@ app.use((req, res, next)=>{
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-
+app.use("/listings/:id/bookings", bookingRoutes);
+ app.use("/", bookingRoutes); // for /my-bookings
 
 
 

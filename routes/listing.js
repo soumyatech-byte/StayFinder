@@ -13,6 +13,7 @@ const upload = multer({ storage });
 router
 .route("/")
 .get( wrapAsync(listingController.index))
+
 .post(
     isLoggedIn, 
     upload.single('listing[image]'),
@@ -21,8 +22,17 @@ router
 );
 
 
+// Search route 
+router.get("/search", wrapAsync(listingController.searchResult));
+
+
+
+
 //new route
 router.get("/new",  isLoggedIn, listingController.renderNewForm);
+
+//filter route(trending)
+router.get("/filter", wrapAsync(listingController.filterListings)); //filters (trending, rooms)
 
 router.route("/:id")
 .get( wrapAsync(listingController.showListing))
@@ -42,6 +52,28 @@ router.route("/:id")
 
 //Edit route
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
+
+
+
+// router.get("/", async (req, res) => {
+
+//     console.log(req);
+//   const { country, minPrice, maxPrice } = req.query;
+//   let filter = {};
+//   if (country) filter.country = country;
+//   if (minPrice || maxPrice) {
+//     filter.price = {};
+//     if (minPrice) filter.price.$gte = minPrice;
+//     if (maxPrice) filter.price.$lte = maxPrice;
+//   }
+//   const listings = await Listing.find(filter);
+//   res.render("listings/index", { listings });
+// });
+
+
+
+
+
 
 
 module.exports = router;

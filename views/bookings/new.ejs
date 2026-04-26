@@ -1,0 +1,26 @@
+<% layout("/layouts/boilerplate") %>
+
+<h2 class="col-6 offset-3">Book <%= listing.title %></h2>
+
+<div class="row mt-3">
+  <form action="/listings/<%= listing._id %>/bookings" method="POST"  class="needs-validation" novalidate>
+   <div class="mb-3 col-6 offset-3">
+     <label for="checkIn" class="form-lable">Check-In</label>
+     <input type="text"  id="datepicker" name="checkIn" required class="form-control "placeholder="Select date" >
+   </div>
+   <div class="mb-3 col-6 offset-3">
+     <label  for="checkOut" class="form-lable">Check-Out</label>
+     <input  type="text"  id="datepicker" name="checkOut" required class="form-control" placeholder="Select date">
+   </div>
+   <div class="mb-3 col-6 offset-3">
+     <label  for="guests" class="form-lable">Guests</label>
+     <input type="number" name="guests" min="1" value="1" class="form-control">
+   </div>
+   <button type="submit" class="btn btn-primary offset-3 ">Confirm Booking</button>
+  </form>
+</div>
+<script>
+  flatpickr("#datepicker", {
+    dateFormat: "Y-m-d"
+  });
+</script>

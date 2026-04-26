@@ -1,11 +1,50 @@
 const Listing = require("../models/listing");
 
 
-module.exports.index = async (req,res)=>{
-   const allListings= await Listing.find({});
-   res.render("listings/index.ejs",{allListings});
+// module.exports.index = async (req,res)=>{
+//    const allListings= await Listing.find({});
+//   res.render("listings/index.ejs",{allListings});
+//    const { country, minPrice, maxPrice } = req.query;
+//   let filter = {};
+//   if(filter !={}){
+//   if (country) filter.country = country;
+//   if (minPrice || maxPrice) {
+//     filter.price = {};
+//     if (minPrice) filter.price.$gte = minPrice;
+//     if (maxPrice) filter.price.$lte = maxPrice;
+   
+//   }
+//   const listings = await Listing.find(filter);
+//  return res.render("listings/index.ejs", { listings });
+// }
+ 
+// };
 
+
+
+module.exports.index = async (req, res) => {
+  
+  const { country, minPrice, maxPrice } = req.query;
+  let filter = {};
+
+  if (country) filter.country = country;
+  if (minPrice || maxPrice) {
+    filter.price = {};
+    if (minPrice) filter.price.$gte = Number(minPrice);
+    if (maxPrice) filter.price.$lte = Number(maxPrice);
+  }
+
+  try {
+    const allListings = await Listing.find(filter);
+    res.render("listings/index.ejs", { allListings });
+    
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Could not load listings");
+    res.redirect("/");
+  }
 };
+
 
 module.exports.renderNewForm = (req,res)=>{
     res.render("listings/new.ejs")
@@ -57,6 +96,20 @@ module.exports.renderEditForm = async (req,res)=>{
     
 };
 
+module.exports.searchResult = async (req, res) => {
+  const { q } = req.query;
+  try {
+    const listings = await Listing.find({ 
+      $text: { $search: q } 
+    });
+    res.render("listings/index", { allListings: listings });
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Search failed");
+    res.redirect("/listings");
+  }
+};
+
 // module.exports.updateListing = async (req,res)=>{
      
 //   let {id}=req.params;
@@ -88,6 +141,10 @@ module.exports.updateListing = async (req, res) => {
     let filename = req.file.filename;
     listing.image = { url, filename };
   }
+  // // Explicitly ensure contactNumber is updated
+  // if (req.body.listing.contactNumber) {
+  //   listing.contactNumber = req.body.listing.contactNumber;
+  // }
 
   await listing.save();
 
@@ -101,4 +158,20 @@ module.exports.destroyListing = async (req,res)=>{
    console.log(deletedListing);
    req.flash("success", " Listing Deleted!");
    res.redirect("/listings");
+};
+
+
+module.exports.filterListings = async (req, res) => {
+  const { category } = req.query; // e.g. ?category=rooms
+  let  allListings ;
+
+  
+
+  if (category) {
+    allListings = await Listing.find({ category });
+  } else {
+    allListings  = await Listing.find({});
+  }
+
+  res.render("listings/index.ejs", {  allListings , category });
 };

@@ -8,7 +8,7 @@
          align-items: center;
       }
 
-      .filter {
+      .filter  {
          text-align: center;
          margin-right: 2rem;
          margin-top: 2rem;
@@ -22,6 +22,12 @@
 
       .filter p {
          font-size: 0.8rem;
+      }
+
+      .filter a {
+        text-decoration: none;
+        color: black;
+        opacity:0.7;
       }
 
       .tax-info {
@@ -42,58 +48,80 @@
 
     <div id="filters">
        <div class="filter">
-        <div><i class="fa-solid fa-fire"></i></div>
+        <a href="/listings/filter?category=trending">
+        <i class="fa-solid fa-fire"></i>
         <p>Trending</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=rooms">
         <div><i class="fa-solid fa-bed"></i>></div>
         <p>Rooms</p>
+        </a>
        </div>
 
         <div class="filter">
+         <a href="/listings/filter?category=cities">
         <div><i class="fa-solid fa-mountain-city"></i></div>
         <p>Iconic Cities</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=mountains">
         <div><i class="fa-solid fa-mountain"></i></div>
         <p>Mountains</p>
+        </a>
        </div>
 
          <div class="filter">
+          <a href="/listings/filter?category=castles">
         <div><i class="fa-brands fa-fort-awesome"></i></div>
         <p>Castles</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=pools">
         <div><i class="fa-solid fa-person-swimming"></i></div>
         <p>Amazing Pools</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=camping">
         <div><i class="fa-solid fa-tent"></i></div>
         <p>Camping</p>
+        </a>
        </div>
 
          <div class="filter">
+          <a href="/listings/filter?category=farms">
         <div><i class="fa-solid fa-cow"></i></div>
         <p>Farms</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=arctic">
         <div><i class="fa-solid fa-snowflake"></i></div>
         <p>Arctic</p>
+        </a>
        </div>
         
          <div class="filter">
+          <a href="/listings/filter?category=domes">
         <div><i class="fa-solid fa-igloo"></i></div>
         <p>Domes</p>
+        </a>
        </div>
 
        <div class="filter">
+        <a href="/listings/filter?category=boats">
         <div><i class="fa-solid fa-ship"></i></div>
         <p>Boats</p>
+         </a>
        </div>
 
        <div  class="tax-toggle">
@@ -103,7 +131,33 @@
        </div>
        </div>
 
-    </div>
+       <form action="/listings" method="GET" class="row g-3 mb-4">
+  <div class="col-md-4">
+    <label for="country" class="form-label">Country</label>
+    <!-- <select name="country" id="country" class="form-select">
+      <option value="">All</option>
+      <option value="India">India</option>
+      <option value="USA">USA</option>
+      <option value="UK">UK</option>
+      <!-- Add more countries -->
+    <!-- </select> --> 
+      <input type="text" name="country" id="country" placeholder="All" class="form-control">
+  </div>
+  <div class="col-md-4">
+    <label for="minPrice" class="form-label">Min Price</label>
+    <input type="number" name="minPrice" id="minPrice" class="form-control">
+  </div>
+  <div class="col-md-4">
+    <label for="maxPrice" class="form-label">Max Price</label>
+    <input type="number" name="maxPrice" id="maxPrice" class="form-control">
+  </div>
+  
+  <div class="col-12">
+    <button type="submit" class="btn btn-success">Apply Filters</button>
+  </div>
+</form>
+
+</div>
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
          <% for(let listing of allListings) { %>
         <a href="/listings/<%=listing._id%>" class="listing-link">
@@ -113,7 +167,7 @@
   <div class="card-body">
     <p class="card-text">
        <b><%=listing.title %> </b><br>
-       &#8377; <%=listing.price.toLocaleString("en-IN") %>/night
+       &#8377; <%=listing.price.toLocaleString("en-IN") %>/day
        <i class="tax-info">&nbsp; &nbsp;+18% GST</i>
     </p>
   </div>

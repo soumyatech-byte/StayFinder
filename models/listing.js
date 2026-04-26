@@ -27,6 +27,29 @@ const listingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+    
+    category: {
+    type: String,
+    enum: [
+      "trending",
+      "rooms",
+      "cities",
+      "mountains",
+      "castles",
+      "pools",
+      "camping",
+      "farms",
+      "arctic",
+      "domes",
+      "boats"
+    ],
+    required: true
+  },
+  contactNumber: {
+    type: String,
+    required: true,
+    match: /^[0-9]{10}$/ // simple validation for 10‑digit phone numbers
+  },
 });
 
 listingSchema.post("findOneAndDelete", async (listing)=>{
@@ -34,6 +57,9 @@ listingSchema.post("findOneAndDelete", async (listing)=>{
         await Review.deleteMany({_id: {$in: listing.reviews }});
     }
 })
+
+listingSchema.index({ title: "text", location: "text" });
+
 
 const Listing =mongoose.model('Listing',listingSchema);
 module.exports=Listing;

@@ -10,8 +10,15 @@
          
            <p class="card-text"><%= listing.description %></p>
            <p class="card-text">&#8377; <%= listing.price.toLocaleString("en-IN") %></p> 
+           <p class="card-text"><%= listing.contactNumber %></p>
            <p class="card-text"><%= listing.location %></p>
             <p class="card-text"><%= listing.country %></p>
+
+            <!-- <div class="mt-3">
+  <h5>Contact Owner:</h5>
+  <p><a href="tel:<%= listing.contactNumber %>"><%= listing.contactNumber %></a></p>
+</div> -->
+
 
         </div>
         </div>
@@ -19,17 +26,39 @@
     
     <br>
      
-     <%if(currUser && listing.owner._id.equals(currUser._id)) { %>
+     
      <div class="btns">
+        <%if(currUser && listing.owner._id.equals(currUser._id)) { %>
          <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
      
   
            <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
           <button class="btn btn-dark  offset-5">Delete</button>
           </form>
-     </div>
-     <% } %>
-         
+
+          <div class="card-body d-flex align-items-center offset-1">
+    <h5 class="mb-0">Click here for booking:</h5>&nbsp;
+    <a href="/listings/<%= listing._id %>/bookings/new" class="btn btn-warning">
+      Book Now
+    </a>
+  </div>
+          <% } else { %>
+              <div class="card-body d-flex align-items-center offset-3">
+    <h5 class="mb-0">Click here for booking:</h5>&nbsp;
+    <a href="/listings/<%= listing._id %>/bookings/new" class="btn btn-warning ">
+      Book Now
+    </a>
+  </div>
+   
+  <% } %>
+     
+  
+</div>
+     </div>  
+
+</div>
+
+
      <div class="col-8 offset-3 mb-3">
       <hr> 
          <% if(currUser) { %> 
@@ -79,6 +108,66 @@
             </div>
      </div>
 
-
-    
+     <div class="col-8 offset-3 mb-3">
+     <h4 >Where you’ll be</h4>
+     <h6 ><%=listing.location%> ,<%=listing.country%></h6>
+     </div>
+     <div id="map" class="col-8 offset-3 mb-3" style="width: 800px; height: 300px;"></div>
 </div>
+
+<script>
+  // const map = new maplibregl.Map({
+  //   container: 'map',
+  //   style: `https://api.maptiler.com/maps/streets/style.json?key=COPbVIXdzYiRL5134Zci`,
+  //   center: [85.83, 20.4961], // Odisha example
+  //   zoom: 10
+  // });
+
+  // // Add zoom buttons
+  // map.addControl(new maplibregl.NavigationControl());
+
+
+
+  // new maplibregl.Marker({ color : "red"})
+  // .setLngLat([85.83963570336992, 20.490587603779826])
+  // .addTo(map);
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: `https://api.maptiler.com/maps/streets/style.json?key=COPbVIXdzYiRL5134Zci`,
+  center: [85.83, 20.4961], // Odisha example
+  zoom: 10
+});
+
+// Add zoom buttons
+map.addControl(new maplibregl.NavigationControl());
+
+// Example: Geocode an address
+const apiKey = "COPbVIXdzYiRL5134Zci";
+const query = "<%=listing.location%>, <%=listing.country%>"; // address or place name
+const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${apiKey}`;
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    if (data.features && data.features.length > 0) {
+      const coords = data.features[0].geometry.coordinates;
+
+      // Add marker at geocoded location
+      new maplibregl.Marker({ color: "red" })
+        .setLngLat(coords)
+        .addTo(map);
+
+      // Center map on the result
+      map.setCenter(coords);
+      map.setZoom(12);
+    } else {
+      console.log("No results found");
+    }
+  })
+  .catch(err => console.error(err));
+
+
+
+  
+</script>

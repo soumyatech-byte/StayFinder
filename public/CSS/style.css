@@ -15,7 +15,7 @@
     background-color: white;
 }
 
-.fa-compass {
+.fa-house {
     color:#fe424d;
     font-size:2rem;
 }
@@ -121,4 +121,11 @@ text-decoration:underline;
 .show-card {
 padding-left:0;
 padding-right:0;
+}
+
+
+.booking-card-img-top{
+    border-radius:1rem !important;
+    width:25% !important;
+    object-fit:cover !important;
 }
